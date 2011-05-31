@@ -7,9 +7,7 @@ win = Ti.UI.createWindow
   backgroundColor: '#fff'
   barColor: '#385292'
 
-data = []
-
-createTweetRow = (tweet) ->
+populateTweetRow = (tweet) ->
   tweet_text = tweet.text
   tweet_user = tweet.from_user
   tweet_avatar = tweet.profile_image_url
@@ -54,8 +52,7 @@ createTweetRow = (tweet) ->
     width: 220
     text: tweet_text
   row.add tweet
-
-  data.push row
+  row
 
 loadTweets = ->
   url = 'http://search.twitter.com/search.json?q=%23titaniumjp'
@@ -63,9 +60,8 @@ loadTweets = ->
   loader.open "GET", url
   loader.onload = ->
     response = eval '(' + this.responseText + ')'
-    createTweetRow tweet for tweet in response.results
     tableView = Ti.UI.createTableView
-      data: data
+      data: response.results.map(populateTweetRow)
       filterAttribute: 'filter'
       backgroundColor: 'white'
     win.add tableView

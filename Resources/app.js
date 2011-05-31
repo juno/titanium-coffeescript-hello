@@ -1,5 +1,5 @@
 (function() {
-  var createTweetRow, data, loadTweets, log, tab1, tabGroup, win;
+  var data, loadTweets, log, populateTweetRow, tab1, tabGroup, win;
   log = function(obj) {
     return Ti.API.log(obj);
   };
@@ -10,7 +10,7 @@
     barColor: '#385292'
   });
   data = [];
-  createTweetRow = function(tweet) {
+  populateTweetRow = function(tweet) {
     var avatar, row, tweet_avatar, tweet_text, tweet_user, user;
     tweet_text = tweet.text;
     tweet_user = tweet.from_user;
@@ -57,7 +57,7 @@
       text: tweet_text
     });
     row.add(tweet);
-    return data.push(row);
+    return row;
   };
   loadTweets = function() {
     var loader, url;
@@ -65,15 +65,10 @@
     loader = Ti.Network.createHTTPClient();
     loader.open("GET", url);
     loader.onload = function() {
-      var response, tableView, tweet, _i, _len, _ref;
+      var response, tableView;
       response = eval('(' + this.responseText + ')');
-      _ref = response.results;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        tweet = _ref[_i];
-        createTweetRow(tweet);
-      }
       tableView = Ti.UI.createTableView({
-        data: data,
+        data: response.results.map(populateTweetRow),
         filterAttribute: 'filter',
         backgroundColor: 'white'
       });
