@@ -1,20 +1,16 @@
 (function() {
-  var loadTweets, log, populateTweetRow, tab1, tabGroup, win;
+  var loadTweets, log, populateTweetRow, tabGroup, tableView, win;
   log = function(obj) {
     return Ti.API.log(obj);
   };
-  loadTweets = function(window) {
+  loadTweets = function(tableView) {
     var loader;
     loader = Ti.Network.createHTTPClient();
     loader.open('GET', 'http://search.twitter.com/search.json?q=%23titaniumjp');
     loader.onload = function() {
-      var response, tableView;
+      var response;
       response = eval('(' + this.responseText + ')');
-      tableView = Ti.UI.createTableView({
-        backgroundColor: 'white',
-        data: response.results.map(populateTweetRow)
-      });
-      return window.add(tableView);
+      return tableView.setData(response.results.map(populateTweetRow));
     };
     return loader.send();
   };
@@ -65,13 +61,16 @@
     title: 'Tweets',
     backgroundColor: '#fff'
   });
+  tableView = Ti.UI.createTableView({
+    backgroundColor: 'white'
+  });
+  win.add(tableView);
   tabGroup = Ti.UI.createTabGroup();
-  tab1 = Ti.UI.createTab({
+  tabGroup.addTab(Ti.UI.createTab({
     icon: 'KS_nav_views.png',
     title: '#titaniumjp',
     window: win
-  });
-  tabGroup.addTab(tab1);
+  }));
   tabGroup.open();
-  loadTweets(win);
+  loadTweets(tableView);
 }).call(this);

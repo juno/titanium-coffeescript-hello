@@ -2,15 +2,12 @@
 log = (obj) -> Ti.API.log obj
 
 # Load a search result JSON and create a table view
-loadTweets = (window) ->
+loadTweets = (tableView) ->
   loader = Ti.Network.createHTTPClient()
   loader.open 'GET', 'http://search.twitter.com/search.json?q=%23titaniumjp'
   loader.onload = ->
     response = eval '(' + @.responseText + ')'
-    tableView = Ti.UI.createTableView
-      backgroundColor: 'white'
-      data: response.results.map(populateTweetRow)
-    window.add tableView
+    tableView.setData response.results.map populateTweetRow
   loader.send()
 
 # Populate a tweet object as a row of table view
@@ -63,6 +60,10 @@ win = Ti.UI.createWindow
   title: 'Tweets'
   backgroundColor: '#fff'
 
+tableView = Ti.UI.createTableView
+  backgroundColor: 'white'
+win.add tableView
+
 tabGroup = Ti.UI.createTabGroup()
 tabGroup.addTab Ti.UI.createTab
   icon: 'KS_nav_views.png'
@@ -70,4 +71,4 @@ tabGroup.addTab Ti.UI.createTab
   window: win
 tabGroup.open()
 
-loadTweets win
+loadTweets tableView
