@@ -1,2 +1,12 @@
-build/iphone/build
 tmp
+build/iphone/Classes
+build/iphone/tmp
+build/iphone/build
+build/iphone/headers
+build/iphone/lib
+build/iphone/Resources
+build/iphone/*.xcodeproj
+build/iphone/*.xcconfig
+build/iphone/main.m
+build/iphone/*.plist
+build/iphone/*.pch
